@@ -1,0 +1,40 @@
+name: Nuclei - baidu
+
+on:
+    schedule:
+      - cron: '0 0 * * *'
+    workflow_dispatch:
+
+jobs:
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 🔎 SubFinder - DNS Enumeration
+        uses: projectdiscovery/subfinder-action@main
+        with:
+          domain: baidu.com
+          
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: subfinderbaidu.com.log
+          path: subfinderbaidu.com.log
+      
+      - name: 💥 httpx - HTTP Web Server probing
+        uses: projectdiscovery/httpx-action@main
+        with:
+          list: subfinderbaidu.com.log
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: httpxbaidu.com.log
+          path: httpxbaidu.com.log
+
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: httpxbaidu.com.log
+
+
