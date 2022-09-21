@@ -10,6 +10,7 @@ jobs:
      - run: |
         echo "A initial message"
         go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+        which subfinder
         subfinder -d baidu.com 
         echo "Another message or command"
         python myscript.py
